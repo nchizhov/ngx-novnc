@@ -1,30 +1,48 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-// @ts-ignore
-import RFB from "@novnc/novnc/core/rfb.js";
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MessageService} from 'primeng/api';
 import {Clipboard} from '@angular/cdk/clipboard';
+import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 
 import {vncBufferDecode, vncBufferEncode} from '../funcs';
 import {getToastMessage} from '../toast-messages';
+import {VncService} from '../vnc.service';
 
+@UntilDestroy()
 @Component({
   selector: 'app-vnc-clipboard-buttons',
   templateUrl: './vnc-clipboard-buttons.component.html',
   styleUrls: ['./vnc-clipboard-buttons.component.scss']
 })
 export class VncClipboardButtonsComponent implements OnInit, OnDestroy {
-  @Input() rfb!: RFB;
-  @Input() isView!: boolean;
-  @Input() isConnected!: boolean;
-  @Input() remoteClipboard!: string | null;
+  private isConnected!: boolean;
+  private isView!: boolean;
+  isDisabled: boolean = true;
 
+  remoteClipboard!: string | null;
   localClipboard: boolean = true;
+
   private permissionsStatus!: PermissionStatus;
 
   constructor(private messageService: MessageService,
+              private vncService: VncService,
               private clipboard: Clipboard) {}
 
   ngOnInit() {
+    this.vncService.isView$
+      .pipe(untilDestroyed(this))
+      .subscribe((isView: boolean) => {
+        this.isView = isView;
+        this.calcButtonStatus();
+      });
+    this.vncService.isConnected$
+      .pipe(untilDestroyed(this))
+      .subscribe((isConnected: boolean) => {
+        this.isConnected = isConnected;
+        this.calcButtonStatus();
+      });
+    this.vncService.remoteClipboard$
+      .pipe(untilDestroyed(this))
+      .subscribe((remoteClipboard: string | null) => this.remoteClipboard = remoteClipboard);
     this.getClipboardPermissions();
   }
 
@@ -35,7 +53,7 @@ export class VncClipboardButtonsComponent implements OnInit, OnDestroy {
   }
 
   onGetClipboard(): void {
-    if (!this.rfb || !this.remoteClipboard) {
+    if (!this.remoteClipboard) {
       return;
     }
     this.clipboard.copy(vncBufferEncode(this.remoteClipboard));
@@ -43,13 +61,11 @@ export class VncClipboardButtonsComponent implements OnInit, OnDestroy {
   }
 
   onSendClipboard(): void {
-    if (!this.rfb || !this.localClipboard) {
+    if (!this.localClipboard) {
       return;
     }
     navigator.clipboard.readText()
-      .then((clipboardText: string) => {
-        this.rfb.clipboardPasteFrom(vncBufferDecode(clipboardText));
-      })
+      .then((clipboardText: string) => this.vncService.clipboardPaste(vncBufferDecode(clipboardText)))
       .catch((reason: any) => this.messageService.add(getToastMessage('clipboard_disabled', reason)));
   }
 
@@ -70,5 +86,9 @@ export class VncClipboardButtonsComponent implements OnInit, OnDestroy {
 
   private onClipboardPermission(): void {
     this.localClipboard = this.permissionsStatus.state !== 'denied';
+  }
+
+  private calcButtonStatus(): void {
+    this.isDisabled = !this.isConnected || this.isView;
   }
 }

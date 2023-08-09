@@ -2,22 +2,13 @@
   <div class="content">
     <div class="p-grid">
       <div class="p-col-12 p-text-center">
-        <app-vnc-key-buttons [rfb]="rfb"
-                             [isConnected]="isConnected"
-                             [isView]="isView"></app-vnc-key-buttons>
+        <app-vnc-key-buttons></app-vnc-key-buttons>
         <span class="delimeter"></span>
-        <app-vnc-clipboard-buttons [rfb]="rfb"
-                                   [isConnected]="isConnected"
-                                   [isView]="isView"
-                                   [remoteClipboard]="remoteClipboard"></app-vnc-clipboard-buttons>
+        <app-vnc-clipboard-buttons></app-vnc-clipboard-buttons>
         <span class="delimeter"></span>
-        <app-vnc-view-buttons [rfb]="rfb"
-                              [(isView)]="isView"
-                              [isConnected]="isConnected"
-                              [resetToggleButtons]="resetToggleButtons.bind(this)"></app-vnc-view-buttons>
+        <app-vnc-view-buttons></app-vnc-view-buttons>
         <span class="delimeter"></span>
-        <app-vnc-action-buttons [rfb]="rfb"
-                                [isConnected]="isConnected"></app-vnc-action-buttons>
+        <app-vnc-action-buttons></app-vnc-action-buttons>
       </div>
     </div>
     <div class="p-d-flex p-jc-center p-ai-center prevnc">
