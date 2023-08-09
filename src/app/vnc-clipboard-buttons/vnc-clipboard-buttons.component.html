@@ -1,0 +1,14 @@
+<span class="p-buttonset p-clipboard">
+  <button pButton
+          [disabled]="isView || !isConnected || !remoteClipboard"
+          (click)="onGetClipboard()"
+          type="button"
+          title="Получить буфер обмена"
+          class="p-button-sm"><i class="pi icon icon-clipboard"></i><i class="pi pi-arrow-down"></i></button>
+  <button pButton
+          [disabled]="isView || !isConnected || !localClipboard"
+          (click)="onSendClipboard()"
+          type="button"
+          title="Передать буфер обмена"
+          class="p-button-sm"><i class="pi icon icon-clipboard"></i><i class="pi pi-arrow-up"></i></button>
+</span>

@@ -1,0 +1,22 @@
+<span class="p-buttonset">
+  <button pButton
+          [disabled]="!isConnected"
+          (click)="onTakeScreenshot()"
+          type="button"
+          title="Сделать скриншот экрана"
+          class="p-button-sm"
+          icon="pi pi-image"></button>
+  <button pButton
+          [disabled]="!isConnected"
+          (click)="onToggleView()"
+          type="button"
+          [title]="isView ? 'Управление' : 'Просмотр'"
+          [icon]="isView ? 'pi icon icon-eye-off' : 'pi icon icon-eye'"
+          class="p-button-sm"></button>
+  <button pButton
+          (click)="onToggleFullScreenView()"
+          type="button"
+          [title]="ifFullScreen ? 'Полный экран' : 'Обычный режим'"
+          [icon]="ifFullScreen ? 'pi icon icon-resize-small' : 'pi icon icon-resize-full'"
+          class="p-button-sm"></button>
+</span>

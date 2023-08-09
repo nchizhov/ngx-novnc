@@ -1,0 +1,44 @@
+<span class="p-buttonset">
+  <button pButton
+          [disabled]="isView || !isConnected"
+          (click)="onPressAltCtrlDel()"
+          type="button"
+          title="Alt-Ctrl-Del"
+          class="p-button-sm"
+          icon="pi icon icon-progress-3"></button>
+  <button pButton
+          [disabled]="isView || !isConnected"
+          (click)="onPressToggleKey('win')"
+          type="button"
+          title="Win"
+          class="p-button-sm"
+          [class.p-button-help]="getToggleStatus('win')"
+          icon="pi icon icon-windows"></button>
+  <button pButton
+          [disabled]="isView || !isConnected"
+          (click)="onPressToggleKey('ctrl')"
+          type="button"
+          title="Ctrl"
+          [class.p-button-help]="getToggleStatus('ctrl')"
+          class="p-button-sm p-bold">Ctrl</button>
+  <button pButton
+          [disabled]="isView || !isConnected"
+          (click)="onPressToggleKey('alt')"
+          type="button"
+          title="Alt"
+          [class.p-button-help]="getToggleStatus('alt')"
+          class="p-button-sm p-bold">Alt</button>
+  <button pButton
+          [disabled]="isView || !isConnected"
+          (click)="onPressKey('XK_Tab')"
+          type="button"
+          title="Tab"
+          class="p-button-sm"
+          icon="pi icon icon-switch"></button>
+  <button pButton
+          [disabled]="isView || !isConnected"
+          (click)="onPressKey('XK_Escape')"
+          type="button"
+          title="Esc"
+          class="p-button-sm p-bold">Esc</button>
+</span>
