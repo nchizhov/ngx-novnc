@@ -2,10 +2,12 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MessageService} from 'primeng/api';
 import {Clipboard} from '@angular/cdk/clipboard';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
+import {DialogService, DynamicDialogRef} from 'primeng/dynamicdialog';
 
 import {vncBufferDecode, vncBufferEncode} from '../funcs';
 import {getToastMessage} from '../toast-messages';
 import {VncService} from '../vnc.service';
+import {ClipboardDialogComponent} from '../dialogs/clipboard/clipboard.component';
 
 @UntilDestroy()
 @Component({
@@ -21,10 +23,12 @@ export class VncClipboardButtonsComponent implements OnInit, OnDestroy {
   remoteClipboard!: string | null;
   localClipboard: boolean = true;
 
+  private dialogRef!: DynamicDialogRef;
   private permissionsStatus!: PermissionStatus;
 
   constructor(private messageService: MessageService,
               private vncService: VncService,
+              private dialogService: DialogService,
               private clipboard: Clipboard) {}
 
   ngOnInit() {
@@ -47,6 +51,9 @@ export class VncClipboardButtonsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    if (this.dialogRef) {
+      this.dialogRef.destroy();
+    }
     if (this.permissionsStatus) {
       this.permissionsStatus.removeEventListener('change', this.onClipboardPermission);
     }
@@ -62,11 +69,32 @@ export class VncClipboardButtonsComponent implements OnInit, OnDestroy {
 
   onSendClipboard(): void {
     if (!this.localClipboard) {
+      this.clipboardDialog();
       return;
     }
     navigator.clipboard.readText()
-      .then((clipboardText: string) => this.vncService.clipboardPaste(vncBufferDecode(clipboardText)))
-      .catch((reason: any) => this.messageService.add(getToastMessage('clipboard_disabled', reason)));
+      .then(this.clipboardPaste.bind(this))
+      .catch((reason: any) => {
+        this.messageService.add(getToastMessage('clipboard_disabled', reason));
+        this.clipboardDialog();
+      });
+  }
+
+  private clipboardDialog(): void {
+    this.dialogRef = this.dialogService.open(ClipboardDialogComponent, {
+      header: 'Передача буфера обмена',
+      width: '500px'
+    });
+    this.dialogRef.onClose
+      .pipe(untilDestroyed(this))
+      .subscribe(this.clipboardPaste.bind(this));
+  }
+
+  private clipboardPaste(text: string | undefined): void {
+    if (!text) {
+      return;
+    }
+    this.vncService.clipboardPaste(vncBufferDecode(text))
   }
 
   private getClipboardPermissions(): void {

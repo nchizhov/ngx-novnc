@@ -6,6 +6,7 @@ import {ToastModule} from 'primeng/toast';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {DynamicDialogModule} from 'primeng/dynamicdialog';
 import {InputTextModule} from 'primeng/inputtext';
+import {InputTextareaModule} from 'primeng/inputtextarea';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -14,6 +15,7 @@ import {VncKeyButtonsComponent} from './vnc-key-buttons/vnc-key-buttons.componen
 import {VncClipboardButtonsComponent} from './vnc-clipboard-buttons/vnc-clipboard-buttons.component';
 import {VncViewButtonsComponent} from './vnc-view-buttons/vnc-view-buttons.component';
 import {VncActionButtonsComponent} from './vnc-action-buttons/vnc-action-buttons.component';
+import {ClipboardDialogComponent} from './dialogs/clipboard/clipboard.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,8 @@ import {VncActionButtonsComponent} from './vnc-action-buttons/vnc-action-buttons
     VncViewButtonsComponent,
     VncActionButtonsComponent,
 
-    PasswordDialogComponent
+    PasswordDialogComponent,
+    ClipboardDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -34,7 +37,8 @@ import {VncActionButtonsComponent} from './vnc-action-buttons/vnc-action-buttons
     ReactiveFormsModule,
     ToastModule,
     DynamicDialogModule,
-    InputTextModule
+    InputTextModule,
+    InputTextareaModule
   ],
   providers: [],
   bootstrap: [AppComponent]

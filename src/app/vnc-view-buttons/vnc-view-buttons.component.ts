@@ -40,11 +40,10 @@ export class VncViewButtonsComponent implements OnInit {
   }
 
   onTakeScreenshot(): void {
-    // TODO: В название добавлять IP/название машины?
     imageDataToBlob(this.vncService.getImageData())
       .then((data: Blob) => {
         const date: string = moment().format('DD.MM.YYYY_HH_mm_ss');
-        saveAs(data, `screenshot_${date}.png`);
+        saveAs(data, `screenshot_${this.vncService.getComputerName()}_${date}.png`);
       })
       .catch((reason: any) => this.messageService.add(getToastMessage('screenshot_error', reason)));
   }

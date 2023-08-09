@@ -28,12 +28,17 @@ export class AppComponent implements OnInit, OnDestroy {
   isConnecting!: boolean;
   isConnected!: boolean;
 
-  dialogRef!: DynamicDialogRef;
+  private vncWSPath: string = '/novnc/vnc/';
+  private backgroundColor: string = '#2a323d';
+
+  private dialogRef!: DynamicDialogRef;
 
   constructor(private vncService: VncService,
               private dialogService: DialogService) {}
 
   ngOnInit() {
+    this.vncService.setWsVNCPath(this.vncWSPath);
+    this.vncService.setBackground(this.backgroundColor);
     this.vncService.isConnecting$
       .pipe(untilDestroyed(this))
       .subscribe((isConnecting: boolean) => this.isConnecting = isConnecting);
